@@ -1,0 +1,26 @@
+[package]
+name = "chickenwm-dwm-hook"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[lib]
+name = "chickenwm_dwm_hook"
+crate-type = ["cdylib", "rlib"]
+
+[[bin]]
+name = "chickenwm-dwm-hook"
+path = "src/main.rs"
+
+[dependencies]
+chickenwm-core.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+parking_lot.workspace = true
+pdb.workspace = true
+windows.workspace = true
