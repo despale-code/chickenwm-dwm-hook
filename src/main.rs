@@ -6,7 +6,8 @@ use clap::Parser;
 use chickenwm_core::bootstrap_config_and_themes;
 use chickenwm_core::init_tracing;
 use chickenwm_dwm_hook::{
-    eject_from_dwm, extract_pe_pdb_signature, inject_into_dwm, resolve_system_dwm_offsets,
+    eject_from_dwm, extract_pe_pdb_signature, inject_into_dwm, is_dwm_hook_injected, ping_dwm_ipc,
+    resolve_system_dwm_offsets,
 };
 use std::path::Path;
 
@@ -32,11 +33,28 @@ struct Cli {
     /// Eject `chickenwm_dwm_hook.dll` from `dwm.exe` and restore original DWM composition bytes.
     #[arg(long)]
     eject: bool,
+
+    /// Check whether `chickenwm_dwm_hook.dll` is injected into `dwm.exe` and answering on `\\.\pipe\dwm_ipc`.
+    #[arg(long)]
+    status: bool,
 }
 
 fn main() -> Result<()> {
     init_tracing("chickenwm_dwm_hook");
     let cli = Cli::parse();
+
+    if cli.status {
+        let injected = is_dwm_hook_injected();
+        if let Some((hooks, visuals)) = ping_dwm_ipc() {
+            println!("active: injected={injected} hooks={hooks} tracked_visuals={visuals}");
+        } else if injected {
+            println!("injected: module loaded in dwm.exe (pipe idle)");
+        } else {
+            println!("inactive");
+            std::process::exit(1);
+        }
+        return Ok(());
+    }
 
     if cli.eject {
         eject_from_dwm()?;
