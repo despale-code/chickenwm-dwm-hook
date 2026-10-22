@@ -1,6 +1,7 @@
 <img src="icon.png" width="96" align="right" alt="">
+#DISCONTINUED
 
-# ChickenWM DWM Hook
+## ChickenWM DWM Hook 
 
 **Experimental, off by default.** Injects into `dwm.exe` for lower-latency effects. Can trip anti-cheat software; leave it off if you play online games.
 
